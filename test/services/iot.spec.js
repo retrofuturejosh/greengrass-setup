@@ -10,7 +10,7 @@ const {
   attachThingPrincipal,
   createPolicy,
   attachPrincipalPolicy
-} = require('../../src/greengrassSetUp');
+} = require('../../src/createGroup');
 const expectedResults = require('../expectedResults.js');
 
 describe('IoT functions', () => {

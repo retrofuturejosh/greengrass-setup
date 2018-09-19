@@ -10,7 +10,7 @@ const greengrass = new AWS.Greengrass({
 const iot = new AWS.Iot({ apiVersion: '2015-05-28', region: 'us-east-1' });
 
 const expectedResults = require('../expectedResults');
-const { createGreengrassGroup } = require('../../src/greengrassSetUp');
+const { createGreengrassGroup } = require('../../src/createGroup');
 
 describe('Greengrass set up', () => {
   let createThingStub;

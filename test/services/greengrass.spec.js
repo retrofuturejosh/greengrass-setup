@@ -11,7 +11,7 @@ const {
   createGroup,
   createCoreDefinition,
   createInitialGroupVersion
-} = require('../../src/greengrassSetUp');
+} = require('../../src/createGroup');
 const expectedResults = require('../expectedResults');
 
 describe('IoT/Greengrass functions', () => {
