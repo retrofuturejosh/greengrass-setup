@@ -1,18 +1,11 @@
-const AWS = require(`aws-sdk`);
-const iot = new AWS.Iot({ apiVersion: '2015-05-28', region: 'us-east-1' });
 const fs = require('fs');
-
-const greengrass = new AWS.Greengrass({
-  apiVersion: '2017-06-07',
-  region: 'us-east-1'
-});
 
 const {
   createGroup,
   createCoreDefinition,
   createDeviceDefinition,
   createInitialGroupVersion
-} = require('../services/greengrass');
+} = require('./services/greengrass');
 
 const {
   createThing,
@@ -20,15 +13,18 @@ const {
   attachThingPrincipal,
   createPolicy,
   attachPrincipalPolicy
-} = require('../services/iot');
+} = require('./services/iot');
 
 /**
  * Sets up greengrass group with thing/core, group, certificate, policy, and version
+ * @param {service} iot - instance of aws.iot()
+ * @param {service} greengrass - instance of aws.greengrass()
  * @param {string} groupName
- * @param {string} thingName
+ * @param {string} thingName - core/thing name
  */
-const createGreengrassGroup = async (groupName, thingName) => {
+const createGreengrassGroup = async (iot, greengrass, groupName, thingName) => {
   try {
+    console.log('Creating greengrass group');
     let groupInfo = {};
     //Create Group
     let group = await createGroup(greengrass, groupName);
@@ -82,7 +78,7 @@ const createGreengrassGroup = async (groupName, thingName) => {
 
     groupInfo.coreDefinition = coreDefinition;
 
-    //create group version
+    // create group version
     let groupVersion = await createInitialGroupVersion(
       greengrass,
       groupId,

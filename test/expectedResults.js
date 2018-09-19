@@ -1,7 +1,6 @@
 module.exports = {
   createGroup: {
-    Arn:
-      'groupArn',
+    Arn: 'groupArn',
     CreationTimestamp: 'timestamp',
     Id: 'groupId',
     LastUpdatedTimestamp: 'timestamp',
@@ -13,28 +12,21 @@ module.exports = {
     thingId: 'randomString'
   },
   createKeysCerts: {
-    certificateArn:
-      'certArn',
-    certificateId:
-      'certId',
-    certificatePem:
-      'certPem',
+    certificateArn: 'certArn',
+    certificateId: 'certId',
+    certificatePem: 'certPem',
     keyPair: {
-      PublicKey:
-        'publicKey',
-      PrivateKey:
-        'privateKey'
+      PublicKey: 'publicKey',
+      PrivateKey: 'privateKey'
     }
   },
   createCoreDefinition: {
-    Arn:
-      'coreArn',
+    Arn: 'coreArn',
     CreationTimestamp: 'timestamp',
     Id: 'coreId',
     LastUpdatedTimestamp: 'timestamp',
     LatestVersion: 'lastestVersionId',
-    LatestVersionArn:
-      'versionArn',
+    LatestVersionArn: 'versionArn',
     Name: 'myNewGroup'
   },
   createPolicy: {
@@ -45,10 +37,51 @@ module.exports = {
     policyVersionId: '1'
   },
   createGGVersion: {
-    Arn:
-      'versionArn',
+    Arn: 'versionArn',
     CreationTimestamp: 'timestamp',
     Id: 'groupId',
     Version: 'versionId'
+  },
+  groupInfo: {
+    group: {
+      Arn: 'groupArn',
+      CreationTimestamp: 'timestamp',
+      Id: 'groupId',
+      LastUpdatedTimestamp: 'timestamp',
+      Name: 'testGroup'
+    },
+    thing: {
+      thingName: 'myNewThing',
+      thingArn: 'thingArn',
+      thingId: 'randomString'
+    },
+    cert: {
+      certificateArn: 'certArn',
+      certificateId: 'certId',
+      certificatePem: 'certPem',
+      keyPair: { PublicKey: 'publicKey', PrivateKey: 'privateKey' }
+    },
+    policy: {
+      policyName: 'greengrassPolicy',
+      policyArn: 'policyArn',
+      policyDocument:
+        '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["iot:Publish","iot:Subscribe","iot:Connect","iot:Receive","iot:GetThingShadow","iot:DeleteThingShadow","iot:UpdateThingShadow","greengrass:AssumeRoleForGroup","greengrass:CreateCertificate","greengrass:GetConnectivityInfo","greengrass:GetDeployment","greengrass:GetDeploymentArtifacts","greengrass:UpdateConnectivityInfo","greengrass:UpdateCoreDeploymentStatus"],"Resource":["*"]}]}',
+      policyVersionId: '1'
+    },
+    coreDefinition: {
+      Arn: 'coreArn',
+      CreationTimestamp: 'timestamp',
+      Id: 'coreId',
+      LastUpdatedTimestamp: 'timestamp',
+      LatestVersion: 'lastestVersionId',
+      LatestVersionArn: 'versionArn',
+      Name: 'myNewGroup'
+    },
+    groupVersion: {
+      Arn: 'versionArn',
+      CreationTimestamp: 'timestamp',
+      Id: 'groupId',
+      Version: 'versionId'
+    }
   }
 };
