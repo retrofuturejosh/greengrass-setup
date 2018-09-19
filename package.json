@@ -1,0 +1,20 @@
+{
+  "name": "iot-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha 'test/**/*.spec.js'",
+    "create-group": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.313.0"
+  },
+  "devDependencies": {
+    "aws-sdk-mock": "^4.1.0",
+    "chai": "^4.1.2"
+  }
+}
