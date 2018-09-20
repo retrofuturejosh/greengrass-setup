@@ -1,4 +1,4 @@
 module.exports = {
-  groupName: '<YOUR GROUP NAME>',
-  coreName: '<YOUR CORE NAME>'
+  groupName: 'NewGroup',
+  coreName: 'NewGroup-Core'
 }
