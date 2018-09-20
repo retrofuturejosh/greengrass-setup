@@ -15,6 +15,8 @@ const {
   attachPrincipalPolicy
 } = require('./services/iot');
 
+const { GreengrassConfigBuilder } = require('./services/ggConfig');
+
 /**
  * Sets up greengrass group with thing/core, group, certificate, policy, and version
  * @param {service} iot - instance of aws.iot()
@@ -22,14 +24,26 @@ const {
  * @param {string} groupName
  * @param {string} thingName - core/thing name
  */
-const createGreengrassGroup = async (iot, greengrass, groupName, thingName) => {
+const createGreengrassGroup = async (
+  iot,
+  greengrass,
+  groupName,
+  thingName,
+  config
+) => {
   try {
     console.log('Creating greengrass group');
+    //groupInfo will save all metadata locally and write it to a file groupInfo.json
     let groupInfo = {};
+
+    //configBuilder creates the config.json file for greengrass
+    let configBuilder = new GreengrassConfigBuilder();
+
     //Create Group
     let group = await createGroup(greengrass, groupName);
     let groupId = group.Id;
 
+    //add group to groupInfo
     groupInfo.group = group;
 
     //Create Thing
@@ -37,6 +51,9 @@ const createGreengrassGroup = async (iot, greengrass, groupName, thingName) => {
     let thingArn = thing.thingArn;
     let thingId = thing.thingId;
 
+    //add thingArn to config
+    configBuilder.addThingArn(thingArn);
+    //add thing to groupInfo
     groupInfo.thing = thing;
 
     //Create Cert
