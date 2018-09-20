@@ -1,8 +1,59 @@
+class IoTService {
+  constructor(iot) {
+    this.iot = iot;
+  }
+
+  /**
+   * creates an iot thing
+   * @param {string} thingName - name of thing to be created
+   * @param {object}  attributes - (optional) object of attributes for thing. e.g. { watts: '100', lumens: '1100' }
+   */
+  createThing(thingName, attributes) {
+    return createThing(this.iot, thingName, attributes);
+  }
+
+  /**
+   * creates iot keys and certificate
+   * @param {boolean} active - setAsActive prop
+   */
+  createKeysCert(active) {
+    return createKeysCert(this.iot, active);
+  }
+
+  /**
+   * Attaches certificate to thing
+   * @param {string} principal - certificate arn
+   * @param {string} thingName - name of thing
+   */
+  attachThingPrincipal(principal, thingName) {
+    return attachThingPrincipal(this.iot, principal, thingName);
+  }
+
+  /**
+   * Creates necessary iot policy
+   * @param {string} policyName - optional: name of policy
+   * @param {string} policyDoc - optional: JSON policy document
+   */
+  createPolicy(iot, policyName, policyDoc) {
+    return createPolicy(this.iot, policyName, policyDoc);
+  }
+
+  /**
+   *
+   * @param {service} iot - instance of aws.iot()
+   * @param {string} policyName - name of IAM policy
+   * @param {strint} principal - arn of principal cert
+   */
+  attachPrincipalPolicy(policyName, principal) {
+    return attachPrincipalPolicy(this.iot, policyName, principal);
+  }
+}
+
 /**
  * creates an iot thing
  * @param {service} iot - instance of aws.iot()
  * @param {string} thingName - name of thing to be created
- * @param {attributes} - (optional) object of attributes for thing. e.g. { watts: '100', lumens: '1100' }
+ * @param {object} attributes - (optional) object of attributes for thing. e.g. { watts: '100', lumens: '1100' }
  */
 function createThing(iot, thingName, attributes) {
   let thingParams = {
@@ -149,5 +200,6 @@ module.exports = {
   createKeysCert,
   attachThingPrincipal,
   createPolicy,
-  attachPrincipalPolicy
+  attachPrincipalPolicy,
+  IoTService
 };

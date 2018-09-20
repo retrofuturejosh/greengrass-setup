@@ -4,32 +4,55 @@ const { stub, spy } = require('sinon');
 
 const iot = new AWS.Iot({ apiVersion: '2015-05-28', region: 'us-east-1' });
 
-const {
-  createThing,
-  createKeysCert,
-  attachThingPrincipal,
-  createPolicy,
-  attachPrincipalPolicy
-} = require('../../src/createGroup');
+const { IoTService } = require('../../src/services/iot');
 const expectedResults = require('../expectedResults.js');
 
-describe('IoT functions', () => {
-  describe('Create Thing function', () => {
-    let createThingStub;
-    let expectedRes = expectedResults.createThing;
-    before(() => {
-      //create stub
-      createThingStub = stub(iot, 'createThing');
-      createThingStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
+describe('IoT Service', () => {
+  //assign expected results
+  const createThingRes = expectedResults.createThing;
+  const createKeysRes = expectedResults.createKeysCerts;
+  const createPolicyRes = expectedResults.createPolicy;
+
+  //stub services
+  let createThingStub = stub(iot, 'createThing');
+  createThingStub.returns({
+    promise: () => {
+      return Promise.resolve(createThingRes);
+    }
+  });
+  createKeysStub = stub(iot, 'createKeysAndCertificate');
+  createKeysStub.returns({
+    promise: () => {
+      return Promise.resolve(createKeysRes);
+    }
+  });
+  let attachPrincipalStub = stub(iot, 'attachThingPrincipal');
+  attachPrincipalStub.returns({
+    promise: () => {
+      return Promise.resolve('success');
+    }
+  });
+  let createPolicyStub = stub(iot, 'createPolicy');
+  createPolicyStub.returns({
+    promise: () => {
+      return Promise.resolve(createPolicyRes);
+    }
+  });
+  let attachPrincPolStub = stub(iot, 'attachPrincipalPolicy');
+  attachPrincPolStub.returns({
+    promise: () => {
+      return Promise.resolve('success');
+    }
+  });
+
+  //start service
+  const iotService = new IoTService(iot);
+
+  describe(`Has working method: 'createThing'`, () => {
     it('Calls the service with correct params and returns IoT promise', async () => {
       let myAttribute = { myAttribute: 'yas', anotherAttribute: 'werk' };
-      let res = await createThing(iot, 'MyTestThing');
-      let res2 = await createThing(iot, 'MyTestThing', myAttribute);
+      let res = await iotService.createThing('MyTestThing');
+      let res2 = await iotService.createThing('MyTestThing', myAttribute);
       expect(createThingStub.args[0][0]).to.deep.equal({
         thingName: 'MyTestThing'
       });
@@ -37,45 +60,23 @@ describe('IoT functions', () => {
         thingName: 'MyTestThing',
         attributePayload: { attributes: myAttribute }
       });
-      expect(res).to.deep.equal(expectedRes);
-      expect(res2).to.deep.equal(expectedRes);
+      expect(res).to.deep.equal(createThingRes);
+      expect(res2).to.deep.equal(createThingRes);
     });
   });
-  describe('Create Keys and Certs function', () => {
-    let createKeysStub;
-    let expectedRes = expectedResults.createKeysCerts;
-    before(() => {
-      //stub service
-      //create stub
-      createKeysStub = stub(iot, 'createKeysAndCertificate');
-      createKeysStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
+  describe(`has working method: 'createKeysCert'`, () => {
     it('Calls service with correct arg and creates keys/certificate', async () => {
-      let res1 = await createKeysCert(iot, true);
-      let res2 = await createKeysCert(iot, false);
-      expect(res1).to.deep.equal(expectedRes);
-      expect(res2).to.deep.equal(expectedRes);
+      let res1 = await iotService.createKeysCert(true);
+      let res2 = await iotService.createKeysCert(false);
+      expect(res1).to.deep.equal(createKeysRes);
+      expect(res2).to.deep.equal(createKeysRes);
       expect(createKeysStub.args[0][0]).to.deep.equal({ setAsActive: true });
       expect(createKeysStub.args[1][0]).to.deep.equal({ setAsActive: false });
     });
   });
-  describe('Attach Thing Principal function', () => {
-    let attachPrincipalStub;
-    before(() => {
-      //stub service
-      attachPrincipalStub = stub(iot, 'attachThingPrincipal');
-      attachPrincipalStub.returns({
-        promise: () => {
-          return Promise.resolve('success');
-        }
-      });
-    });
+  describe(`has working method: 'attachThingPrincipal'`, () => {
     it('Calls the service with correct params and returns IoT promise', async () => {
-      let res = await attachThingPrincipal(iot, 'certArn', 'testThing');
+      let res = await iotService.attachThingPrincipal('certArn', 'testThing');
       let calledWith = {
         principal: 'certArn',
         thingName: 'testThing'
@@ -83,20 +84,9 @@ describe('IoT functions', () => {
       expect(attachPrincipalStub.args[0][0]).to.deep.equal(calledWith);
     });
   });
-  describe('Create IoT Policy Function ', () => {
-    let createPolicyStub;
-    let expectedRes = expectedResults.createPolicy;
-    before(() => {
-      //stub service
-      createPolicyStub = stub(iot, 'createPolicy');
-      createPolicyStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
+  describe(`has working method: createPolicy`, () => {
     it('Calls the service with correct params and returns IoT promise', async () => {
-      let res = await createPolicy(iot);
+      let res = await iotService.createPolicy();
       let policy = {
         Version: '2012-10-17',
         Statement: [
@@ -126,23 +116,16 @@ describe('IoT functions', () => {
         policyDocument: JSON.stringify(policy) /* required */,
         policyName: 'greengrassPolicy' /* required */
       };
-      expect(res).to.deep.equal(expectedRes);
+      expect(res).to.deep.equal(createPolicyRes);
       expect(createPolicyStub.args[0][0]).to.deep.equal(calledWith);
     });
   });
-  describe('Attach Principal Policy function', () => {
-    let attachPrincPolStub;
-    before(() => {
-      //stub service
-      attachPrincPolStub = stub(iot, 'attachPrincipalPolicy');
-      attachPrincPolStub.returns({
-        promise: () => {
-          return Promise.resolve('success');
-        }
-      });
-    });
+  describe(`has working method: 'attachPrincipalPolicy'`, () => {
     it('Calls the service with correct params and returns IoT promise', async () => {
-      let res = await attachPrincipalPolicy(iot, 'myPolicy', 'myPrincipal');
+      let res = await iotService.attachPrincipalPolicy(
+        'myPolicy',
+        'myPrincipal'
+      );
       expect(res).to.equal('success');
       expect(attachPrincPolStub.args[0][0]).to.deep.equal({
         policyName: 'myPolicy',

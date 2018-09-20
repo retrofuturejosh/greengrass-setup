@@ -1,3 +1,80 @@
+class GreengrassService {
+  constructor(greengrass) {
+    this.greengrass = greengrass;
+  }
+
+  /**
+   * creates new greengrass group
+   *
+   * @param {string} name - name of group
+   */
+  createGroup(name) {
+    return createGroup(this.greengrass, name);
+  }
+
+  /**
+   * creates a new core definition
+   *
+   * @param {string} coreDefinitionName - name of core definition
+   * @param {object} initialVersion - intial version object e.g. {
+      Cores: [
+        {
+          Id: thingName,
+          CertificateArn: certArn,
+          SyncShadow: True,
+          ThingArn: thingArn
+        }
+      ]
+    };
+  */
+  createCoreDefinition(coreDefinitionName, initialVersion) {
+    return createCoreDefinition(
+      this.greengrass,
+      coreDefinitionName,
+      initialVersion
+    );
+  }
+
+  /**
+   * Creates a device definition
+   *
+   * @param {string} token - client token
+   * @param {sting} certArn - arn of certificate
+   * @param {string} deviceId - id of device
+   * @param {boolean} syncShadow
+   * @param {string} thingArn - arn of thing
+   * @param {string} deviceName - name of device
+   */
+  createDeviceDefinition(
+    token,
+    certArn,
+    deviceId,
+    syncShadow,
+    thingArn,
+    deviceName
+  ) {
+    return createDeviceDefinition(
+      this.greengrass,
+      token,
+      certArn,
+      deviceId,
+      syncShadow,
+      thingArn,
+      deviceName
+    );
+  }
+
+  /**
+   * creates first version of group, connecting core
+   *
+   * @param {string} groupId - id of group
+   * @param {string} coreArn - arn of latest core version
+   */
+  createInitialGroupVersion(groupId, coreArn) {
+    return createInitialGroupVersion(this.greengrass, groupId, coreArn);
+  }
+}
+
 /**
  *
  * @param {service} greengrass - instance of aws.greengrass()
@@ -88,7 +165,10 @@ function createDeviceDefinition(
     .createDeviceDefinition(params)
     .promise()
     .then(res => {
-      console.log('Successfully Created Device Definition:', JSON.stringify(res));
+      console.log(
+        'Successfully Created Device Definition:',
+        JSON.stringify(res)
+      );
       return res;
     })
     .catch(err => {
@@ -124,5 +204,6 @@ module.exports = {
   createGroup,
   createCoreDefinition,
   createDeviceDefinition,
-  createInitialGroupVersion
+  createInitialGroupVersion,
+  GreengrassService
 };

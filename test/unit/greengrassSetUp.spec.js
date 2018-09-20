@@ -109,6 +109,7 @@ describe('Greengrass set up', () => {
     expect(groupInfo).to.deep.equal(expectedResults.groupInfo);
     let certPath = fs.existsSync('./certs/cloud-pem-crt');
     let keyPath = fs.existsSync('./certs/cloud-pem-key');
+    let config = fs.existsSync('config.json');
     expect(certPath).to.equal(true);
     expect(keyPath).to.equal(true);
     fs.unlink('groupInfo.json', function(err) {
