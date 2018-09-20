@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha 'test/**/*.spec.js'",
-    "create-group": "node src/index.js"
+    "create-group": "node src/index.js",
+    "launch-ec2": "aws cloudformation create-stack --stack-name iot-workshop --template-body file://src/stacks/cloudformation-stack.yml --parameters file://src/stacks/stack-params.json"
   },
   "keywords": [],
   "author": "",
