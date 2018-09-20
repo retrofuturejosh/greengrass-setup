@@ -103,11 +103,25 @@ describe('Greengrass set up', () => {
     });
   });
   it('Writes the file groupInfo.json', () => {
-    let groupInfo = JSON.parse(fs.readFileSync('groupInfo.json').toString('utf-8'));
-    expect(groupInfo).to.deep.equal(expectedResults.groupInfo)
+    let groupInfo = JSON.parse(
+      fs.readFileSync('groupInfo.json').toString('utf-8')
+    );
+    expect(groupInfo).to.deep.equal(expectedResults.groupInfo);
+    let certPath = fs.existsSync('./certs/cloud-pem-crt');
+    let keyPath = fs.existsSync('./certs/cloud-pem-key');
+    expect(certPath).to.equal(true);
+    expect(keyPath).to.equal(true);
     fs.unlink('groupInfo.json', function(err) {
       if (err) return console.log(err);
       console.log('groupInfo.json deleted successfully');
+    });
+    fs.unlink('./certs/cloud-pem-crt', function(err) {
+      if (err) return console.log(err);
+      console.log('cloud-pem-crt deleted successfully');
+    });
+    fs.unlink('./certs/cloud-pem-key', function(err) {
+      if (err) return console.log(err);
+      console.log('cloud-pem-key deleted successfully');
     });
   });
 });

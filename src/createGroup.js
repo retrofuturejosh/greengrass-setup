@@ -59,7 +59,10 @@ const createGreengrassGroup = async (
     //Create Cert
     let cert = await createKeysCert(iot, true);
     let certArn = cert.certificateArn;
-
+    let certPem = cert.certificatePem;
+    let keyPem = cert.keyPair.PrivateKey;
+    fs.writeFileSync(__dirname + '/../certs/cloud-pem-crt', certPem);
+    fs.writeFileSync(__dirname + '/../certs/cloud-pem-key', keyPem);
     groupInfo.cert = cert;
 
     //Attach Thing Principal
