@@ -21,6 +21,7 @@ describe('Greengrass set up', () => {
   let createGroupStub;
   let createCoreDefStub;
   let groupVersionStub;
+  let getEndpointStub;
 
   before(async () => {
     //create stubs
@@ -80,6 +81,13 @@ describe('Greengrass set up', () => {
       }
     });
 
+    getEndpointStub = stub(iot, 'describeEndpoint');
+    getEndpointStub.returns({
+      promise: () => {
+        return Promise.resolve(expectedResults.endpoint);
+      }
+    });
+
     let result = await createGreengrassGroup(
       iot,
       greengrass,
@@ -96,18 +104,34 @@ describe('Greengrass set up', () => {
       attachPrincPolStub,
       createGroupStub,
       createCoreDefStub,
-      groupVersionStub
+      groupVersionStub,
+      getEndpointStub
     ];
     stubs.forEach(stub => {
       return checkStub(stub);
     });
   });
   it('Writes the file groupInfo.json', () => {
-    let groupInfo = JSON.parse(fs.readFileSync('groupInfo.json').toString('utf-8'));
-    expect(groupInfo).to.deep.equal(expectedResults.groupInfo)
+    let groupInfo = JSON.parse(
+      fs.readFileSync('groupInfo.json').toString('utf-8')
+    );
+    expect(groupInfo).to.deep.equal(expectedResults.groupInfo);
+    let certPath = fs.existsSync('./certs/cloud-pem-crt');
+    let keyPath = fs.existsSync('./certs/cloud-pem-key');
+    let config = fs.existsSync('config.json');
+    expect(certPath).to.equal(true);
+    expect(keyPath).to.equal(true);
     fs.unlink('groupInfo.json', function(err) {
       if (err) return console.log(err);
       console.log('groupInfo.json deleted successfully');
+    });
+    fs.unlink('./certs/cloud-pem-crt', function(err) {
+      if (err) return console.log(err);
+      console.log('cloud-pem-crt deleted successfully');
+    });
+    fs.unlink('./certs/cloud-pem-key', function(err) {
+      if (err) return console.log(err);
+      console.log('cloud-pem-key deleted successfully');
     });
   });
 });

@@ -2,52 +2,59 @@ const AWS = require(`aws-sdk`);
 const { expect } = require('chai');
 const { stub, spy } = require('sinon');
 
+//start greengrass()
 const greengrass = new AWS.Greengrass({
   apiVersion: '2017-06-07',
   region: 'us-east-1'
 });
 
-const {
-  createGroup,
-  createCoreDefinition,
-  createInitialGroupVersion
-} = require('../../src/createGroup');
+//import greengrass service and expected results
+const { GreengrassService } = require('../../src/services/greengrass');
 const expectedResults = require('../expectedResults');
 
-describe('IoT/Greengrass functions', () => {
-  describe('Create Group function', () => {
-    let createGroupStub;
-    let expectedRes = expectedResults.createGroup;
-    before(() => {
-      //create stub
-      createGroupStub = stub(greengrass, 'createGroup');
-      createGroupStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
-    it('Calls the service with correct params and returns greengrass promise', async () => {
-      let res = await createGroup(greengrass, 'testName');
-      expect(res).to.deep.equal(expectedRes);
+//testing suite
+describe('Greengrass service', () => {
+  //assign expected results
+  let createCoreRes = expectedResults.createCoreDefinition;
+  let createGroupRes = expectedResults.createGroup;
+  let ggVersionRes = expectedResults.createGGVersion;
+
+  //stub services
+  let createGroupStub = stub(greengrass, 'createGroup');
+  createGroupStub.returns({
+    promise: () => {
+      return Promise.resolve(createGroupRes);
+    }
+  });
+  let createCoreDefStub = stub(greengrass, 'createCoreDefinition');
+  createCoreDefStub.returns({
+    promise: () => {
+      return Promise.resolve(createCoreRes);
+    }
+  });
+  let groupVersionStub = stub(greengrass, 'createGroupVersion');
+  groupVersionStub.returns({
+    promise: () => {
+      return Promise.resolve(ggVersionRes);
+    }
+  });
+
+  //start service
+  const greengrassService = new GreengrassService(greengrass);
+
+  //test methods
+  describe(`has working method 'createGroup'`, () => {
+    it('createGroup calls the service with correct params and returns greengrass promise', async () => {
+      let res = await greengrassService.createGroup('testName');
+      expect(res).to.deep.equal(createGroupRes);
       expect(createGroupStub.args[0][0]).to.deep.equal({
         Name: 'testName'
       });
     });
   });
-  describe('Create Core Definition', () => {
-    let createCoreDefStub;
-    let expectedRes = expectedResults.createCoreDefinition;
-    before(() => {
-      //stub service
-      createCoreDefStub = stub(greengrass, 'createCoreDefinition');
-      createCoreDefStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
-    it('Calls the service with correct params and returns greengrass promise', async () => {
+
+  describe(`has working method 'createCoreDefinition'`, () => {
+    it('createCoreDefinition calls the service with correct params and returns greengrass promise', async () => {
       let initialVersion = {
         Cores: [
           {
@@ -58,8 +65,7 @@ describe('IoT/Greengrass functions', () => {
           }
         ]
       };
-      let res = await createCoreDefinition(
-        greengrass,
+      let res = await greengrassService.createCoreDefinition(
         'myCoreDefName',
         initialVersion
       );
@@ -76,29 +82,22 @@ describe('IoT/Greengrass functions', () => {
         },
         Name: 'myCoreDefName'
       };
-      expect(res).to.deep.equal(expectedRes);
+      expect(res).to.deep.equal(createCoreRes);
       expect(createCoreDefStub.args[0][0]).to.deep.equal(calledWith);
     });
   });
-  describe('Create Group Version func', () => {
-    let groupVersionStub;
-    let expectedRes = expectedResults.createGGVersion;
-    before(() => {
-      //stub service
-      groupVersionStub = stub(greengrass, 'createGroupVersion');
-      groupVersionStub.returns({
-        promise: () => {
-          return Promise.resolve(expectedRes);
-        }
-      });
-    });
-    it('Calls the service with correct params and returns greengrass promise', async () => {
-      let res = await createInitialGroupVersion(greengrass, 'groupID', 'coreArn');
+
+  describe(`has working method 'createGroupVersion'`, () => {
+    it('createGroupVersion calls the service with correct params and returns greengrass promise', async () => {
+      let res = await greengrassService.createInitialGroupVersion(
+        'groupID',
+        'coreArn'
+      );
       let calledWith = {
         GroupId: 'groupID',
         CoreDefinitionVersionArn: 'coreArn'
       };
-      expect(res).to.deep.equal(expectedRes);
+      expect(res).to.deep.equal(ggVersionRes);
       expect(groupVersionStub.args[0][0]).to.deep.equal(calledWith);
     });
   });

@@ -42,6 +42,7 @@ module.exports = {
     Id: 'groupId',
     Version: 'versionId'
   },
+  endpoint: { endpointAddress: 'uniquenumber.iot.us-east-1.amazonaws.com' },
   groupInfo: {
     group: {
       Arn: 'groupArn',
@@ -82,6 +83,7 @@ module.exports = {
       CreationTimestamp: 'timestamp',
       Id: 'groupId',
       Version: 'versionId'
-    }
+    },
+    iotHost: { endpointAddress: 'uniquenumber.iot.us-east-1.amazonaws.com' }
   }
 };
