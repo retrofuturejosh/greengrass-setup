@@ -17,9 +17,47 @@ Resources:
         FromPort: '8883'
         ToPort: '8883'
         CidrIp: 0.0.0.0/0
+
+  EC2InstanceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        -
+          PolicyName: IoTWorkshopPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - "iam:*"
+                  - "greengrass:*"
+                  - "iot:*"
+                  - "lambda:*"
+                  - "iotanalytics:*"
+                Resource: "*"
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2InstanceRole
+
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
+      IamInstanceProfile: !Ref EC2InstanceProfile
       KeyName: !Ref EC2KeyName
       SecurityGroups:
       - !Ref InstanceSecurityGroup
@@ -48,7 +86,6 @@ Resources:
             cd iot-workshop
             # clone greengrass-setup repo
             git clone https://github.com/retrofuturejosh/greengrass-setup.git
-            cd iot-workshop
             cd greengrass-setup
             # run greengrass-setup
             npm install
