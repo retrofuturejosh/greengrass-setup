@@ -1,0 +1,6 @@
+[
+  {
+    "ParameterKey": "EC2KeyName",
+    "ParameterValue": "JoshKey"
+  }
+]
