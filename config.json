@@ -1,0 +1,15 @@
+{
+  "coreThing": {
+    "caPath": "root-ca-pem",
+    "certPath": "cloud-pem-crt",
+    "keyPath": "cloud-pem-key",
+    "thingArn": "thingArn",
+    "iotHost": "uniquenumber.iot.us-east-1.amazonaws.com",
+    "ggHost": "greengrass.iot.us-east-1.amazonaws.com",
+    "keepAlive": 600,
+    "mqttMaxConnectionRetryInterval": 60
+  },
+  "runtime": { "cgroup": { "useSystemd": "yes" } },
+  "managedRespawn": true,
+  "writeDirectory": "/write-directory"
+}
