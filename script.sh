@@ -15,6 +15,10 @@ mkdir iot-workshop
 cd iot-workshop
 # clone greengrass-setup repo
 git clone https://github.com/retrofuturejosh/greengrass-setup.git
+
+
+
+cd iot-workshop
 cd greengrass-setup
 # run greengrass-setup
 npm install
@@ -25,7 +29,7 @@ adduser --system ggc_user
 groupadd --system ggc_group
 
 # get CA root
-wget -O /home/ec2-user/iot-workshop/root.ca.pem http://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+wget -O /home/ec2-user/iot-workshop/greengrass-setup/downloads/root.ca.pem http://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 
 # Copy greengrass binaries
-tar -xzf /home/ec2-user/iot-workshop/greengrass-ubuntu-x86-64-1.5.0.tar.gz -C /
+tar -xzf /home/ec2-user/iot-workshop/greengrass-setup/downloads/greengrass-linux-x86-64-1.6.0.tar.gz -C /
