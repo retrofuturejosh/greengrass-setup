@@ -2,9 +2,9 @@ class GreengrassConfigBuilder {
   constructor() {
     this.config = {
       coreThing: {
-        caPath: '/greengrass/certs/root-ca-pem',
-        certPath: '/greengrass/certs/cloud-pem-crt',
-        keyPath: '/greengrass/certs/cloud-pem-key',
+        caPath: 'root-ca-pem',
+        certPath: 'cloud-pem-crt',
+        keyPath: 'cloud-pem-key',
         thingArn: 'thing-arn',
         iotHost: 'host-prefix.iot.aws-region.amazonaws.com',
         ggHost: 'greengrass.iot.us-east-1.amazonaws.com',
@@ -14,7 +14,7 @@ class GreengrassConfigBuilder {
       runtime: { cgroup: { useSystemd: 'yes' } },
       managedRespawn: true,
       writeDirectory: '/write-directory'
-    }
+    };
   }
 
   getConfig() {
