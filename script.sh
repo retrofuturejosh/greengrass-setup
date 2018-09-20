@@ -33,3 +33,4 @@ wget -O /home/ec2-user/iot-workshop/greengrass-setup/downloads/root.ca.pem http:
 
 # Copy greengrass binaries
 tar -xzf /home/ec2-user/iot-workshop/greengrass-setup/downloads/greengrass-linux-x86-64-1.6.0.tar.gz -C /
+
