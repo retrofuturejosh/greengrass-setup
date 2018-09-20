@@ -201,9 +201,5 @@ function createInitialGroupVersion(greengrass, groupId, coreArn) {
 }
 
 module.exports = {
-  createGroup,
-  createCoreDefinition,
-  createDeviceDefinition,
-  createInitialGroupVersion,
   GreengrassService
 };

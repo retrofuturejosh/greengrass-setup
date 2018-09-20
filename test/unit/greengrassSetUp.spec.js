@@ -21,6 +21,7 @@ describe('Greengrass set up', () => {
   let createGroupStub;
   let createCoreDefStub;
   let groupVersionStub;
+  let getEndpointStub;
 
   before(async () => {
     //create stubs
@@ -80,6 +81,13 @@ describe('Greengrass set up', () => {
       }
     });
 
+    getEndpointStub = stub(iot, 'describeEndpoint');
+    getEndpointStub.returns({
+      promise: () => {
+        return Promise.resolve(expectedResults.endpoint);
+      }
+    });
+
     let result = await createGreengrassGroup(
       iot,
       greengrass,
@@ -96,7 +104,8 @@ describe('Greengrass set up', () => {
       attachPrincPolStub,
       createGroupStub,
       createCoreDefStub,
-      groupVersionStub
+      groupVersionStub,
+      getEndpointStub
     ];
     stubs.forEach(stub => {
       return checkStub(stub);

@@ -104,6 +104,12 @@ const createGreengrassGroup = async (
     );
     groupInfo.groupVersion = groupVersion;
 
+    //ENDPOINT
+    let endpoint = await iotService.getIoTEndpoint();
+    //add to config file
+    configBuilder.addIotHost(endpoint.endpointAddress);
+    groupInfo.iotHost = endpoint;
+
     //save group information and config.json
     fs.writeFileSync('groupInfo.json', JSON.stringify(groupInfo));
     fs.writeFileSync('config.json', JSON.stringify(configBuilder.getConfig()));

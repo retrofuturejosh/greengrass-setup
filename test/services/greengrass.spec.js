@@ -44,7 +44,7 @@ describe('Greengrass service', () => {
 
   //test methods
   describe(`has working method 'createGroup'`, () => {
-    it('Calls the service with correct params and returns greengrass promise', async () => {
+    it('createGroup calls the service with correct params and returns greengrass promise', async () => {
       let res = await greengrassService.createGroup('testName');
       expect(res).to.deep.equal(createGroupRes);
       expect(createGroupStub.args[0][0]).to.deep.equal({
@@ -54,7 +54,7 @@ describe('Greengrass service', () => {
   });
 
   describe(`has working method 'createCoreDefinition'`, () => {
-    it('Calls the service with correct params and returns greengrass promise', async () => {
+    it('createCoreDefinition calls the service with correct params and returns greengrass promise', async () => {
       let initialVersion = {
         Cores: [
           {
@@ -88,7 +88,7 @@ describe('Greengrass service', () => {
   });
 
   describe(`has working method 'createGroupVersion'`, () => {
-    it('Calls the service with correct params and returns greengrass promise', async () => {
+    it('createGroupVersion calls the service with correct params and returns greengrass promise', async () => {
       let res = await greengrassService.createInitialGroupVersion(
         'groupID',
         'coreArn'

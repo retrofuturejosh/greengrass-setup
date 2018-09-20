@@ -12,6 +12,7 @@ describe('IoT Service', () => {
   const createThingRes = expectedResults.createThing;
   const createKeysRes = expectedResults.createKeysCerts;
   const createPolicyRes = expectedResults.createPolicy;
+  const endpointRes = expectedResults.endpoint;
 
   //stub services
   let createThingStub = stub(iot, 'createThing');
@@ -44,12 +45,18 @@ describe('IoT Service', () => {
       return Promise.resolve('success');
     }
   });
+  let getEndpointStub = stub(iot, 'describeEndpoint');
+  getEndpointStub.returns({
+    promise: () => {
+      return Promise.resolve(endpointRes);
+    }
+  });
 
   //start service
   const iotService = new IoTService(iot);
 
   describe(`Has working method: 'createThing'`, () => {
-    it('Calls the service with correct params and returns IoT promise', async () => {
+    it('createThing calls the service with correct params and returns IoT promise', async () => {
       let myAttribute = { myAttribute: 'yas', anotherAttribute: 'werk' };
       let res = await iotService.createThing('MyTestThing');
       let res2 = await iotService.createThing('MyTestThing', myAttribute);
@@ -65,7 +72,7 @@ describe('IoT Service', () => {
     });
   });
   describe(`has working method: 'createKeysCert'`, () => {
-    it('Calls service with correct arg and creates keys/certificate', async () => {
+    it('createKeysCert calls service with correct arg and creates keys/certificate', async () => {
       let res1 = await iotService.createKeysCert(true);
       let res2 = await iotService.createKeysCert(false);
       expect(res1).to.deep.equal(createKeysRes);
@@ -75,7 +82,7 @@ describe('IoT Service', () => {
     });
   });
   describe(`has working method: 'attachThingPrincipal'`, () => {
-    it('Calls the service with correct params and returns IoT promise', async () => {
+    it('attachThingPrincipal calls the service with correct params and returns IoT promise', async () => {
       let res = await iotService.attachThingPrincipal('certArn', 'testThing');
       let calledWith = {
         principal: 'certArn',
@@ -85,7 +92,7 @@ describe('IoT Service', () => {
     });
   });
   describe(`has working method: createPolicy`, () => {
-    it('Calls the service with correct params and returns IoT promise', async () => {
+    it('createPolicy calls the service with correct params and returns IoT promise', async () => {
       let res = await iotService.createPolicy();
       let policy = {
         Version: '2012-10-17',
@@ -121,7 +128,7 @@ describe('IoT Service', () => {
     });
   });
   describe(`has working method: 'attachPrincipalPolicy'`, () => {
-    it('Calls the service with correct params and returns IoT promise', async () => {
+    it('attachPrincipalPolicy calls the service with correct params and returns IoT promise', async () => {
       let res = await iotService.attachPrincipalPolicy(
         'myPolicy',
         'myPrincipal'
@@ -131,6 +138,12 @@ describe('IoT Service', () => {
         policyName: 'myPolicy',
         principal: 'myPrincipal'
       });
+    });
+  });
+  describe(`has a working method: 'getEndpoint'`, () => {
+    it('getEndpoint calls the service with correct params and returns IoT promise', async () => {
+      let res = await iotService.getIoTEndpoint();
+      expect(res).to.equal(endpointRes);
     });
   });
 });

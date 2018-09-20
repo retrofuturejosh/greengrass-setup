@@ -47,6 +47,10 @@ class IoTService {
   attachPrincipalPolicy(policyName, principal) {
     return attachPrincipalPolicy(this.iot, policyName, principal);
   }
+
+  getIoTEndpoint() {
+    return getEndpoint(this.iot, 'iot:Data')
+  }
 }
 
 /**
@@ -195,11 +199,27 @@ function attachPrincipalPolicy(iot, policyName, principal) {
     });
 }
 
+/**
+ * returns endpoint
+ * @param {service} iot - instance of aws.iot()
+ * @param {string} type - endpoint type, one of: `iot:Data`, `iot:CredentialProvider` and `iot:Jobs`
+ */
+function getEndpoint(iot, type) {
+  var params = {
+    endpointType: type
+  };
+  return iot
+    .describeEndpoint(params)
+    .promise()
+    .then(res => {
+      console.log('got endpoint: ', res);
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
 module.exports = {
-  createThing,
-  createKeysCert,
-  attachThingPrincipal,
-  createPolicy,
-  attachPrincipalPolicy,
   IoTService
 };

@@ -7,7 +7,7 @@ class GreengrassConfigBuilder {
         keyPath: '/greengrass/certs/cloud-pem-key',
         thingArn: 'thing-arn',
         iotHost: 'host-prefix.iot.aws-region.amazonaws.com',
-        ggHost: 'greengrass.iot.aws-region.amazonaws.com',
+        ggHost: 'greengrass.iot.us-east-1.amazonaws.com',
         keepAlive: 600,
         mqttMaxConnectionRetryInterval: 60
       },
